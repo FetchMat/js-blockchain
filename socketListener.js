@@ -1,3 +1,4 @@
+const { io } = require('socket.io-client')
 const Block = require('./Block')
 const Blockchain = require('./Blockchain')
 
@@ -9,9 +10,14 @@ const socketListener = (socket, chain) => {
     })
 
     socket.on('blockmined', (newChain) => {  
-              
-        Blockchain.chain = newChain     
-        console.info(`BLockchain synchronized`)
+        
+        if(chain.lenght < newChain.lenght){            
+            Blockchain.chain = newChain
+            console.info(`BLockchain synchronized`)
+        } else
+        {
+            console.info(`BLockchain already synchronized`)
+        }
     })
 
     return socket   

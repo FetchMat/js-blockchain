@@ -1,10 +1,11 @@
 const { io } = require('socket.io-client');
 const Block = require('./Block')
+const ProofOfWork = require('./ProofOfWork')
 
 class Blockchain{
     constructor(io){
         this.chain = [this.startGenesisBlock()];
-        this.difficulty = 2;
+        this.difficulty = 4;
         this.nodes= [];
         this.io = io;
     }
@@ -19,12 +20,19 @@ class Blockchain{
         return this.chain[this.chain.length - 1]        
     }
 
-    addNewBlock(newblock){
-        newblock.precedinghash = this.getLatestBlock().hash;
-        newblock.index = this.getLatestBlock().index + 1
-        newblock.proofOfWork(this.difficulty);
+    blockMined(block){
         this.chain.push(newblock)
         this.io.emit('blockmined', this.chain)
+    }
+
+    async addNewBlock(newblock){
+        newblock.precedinghash = this.getLatestBlock().hash;
+        newblock.index = this.getLatestBlock().index + 1
+        process.env.BREAK = false;
+        const {block, StopMine} = await ProofOfWork(newblock, this.difficulty)
+        if( StopMine !== 'true'){
+            this.blockMined(block)
+        }        
     }
 
     editHash(indice,newhash){
