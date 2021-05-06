@@ -8,9 +8,8 @@ const socketListener = (socket, chain) => {
         console.info(`Block number ${block.index} just mined`)
     })
 
-    socket.on('blockmined', (newChain) => {
-        
-        
+    socket.on('blockmined', (newChain) => {  
+              
         Blockchain.chain = newChain     
         console.info(`BLockchain synchronized`)
     })
