@@ -9,13 +9,9 @@ const socketListener = (socket, chain) => {
     })
 
     socket.on('blockmined', (newChain) => {
-        let nonceNew = newChain.getlatestBlock().nonce
-        let nonce = chain.getlatestBlock().nonce
-        if (nonceNew < nonce){
-            Blockchain.chain = newChain
-        } else {
-            Blockchain.chain = chain
-        }       
+        
+        
+        Blockchain.chain = newChain     
         console.info(`BLockchain synchronized`)
     })
 
