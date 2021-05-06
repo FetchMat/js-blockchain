@@ -9,15 +9,10 @@ const socketListener = (socket, chain) => {
         console.info(`Block number ${block.index} just mined`)
     })
 
-    socket.on('blockmined', (newChain) => {  
-        
-        if(chain.lenght < newChain.lenght){            
-            Blockchain.chain = newChain
-            console.info(`BLockchain synchronized`)
-        } else
-        {
-            console.info(`BLockchain already synchronized`)
-        }
+    socket.on('blockmined', (newChain) => {                
+        process.env.BREAK = true;
+        Blockchain.chain = newChain
+        console.info(`BLockchain synchronized`)
     })
 
     return socket   
