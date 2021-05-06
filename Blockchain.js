@@ -5,7 +5,7 @@ const ProofOfWork = require('./ProofOfWork')
 class Blockchain{
     constructor(io){
         this.chain = [this.startGenesisBlock()];
-        this.difficulty = 4;
+        this.difficulty = 5;
         this.nodes= [];
         this.io = io;
     }
@@ -21,15 +21,18 @@ class Blockchain{
     }
 
     blockMined(block){
-        this.chain.push(newblock)
+        this.chain.push(block)
         this.io.emit('blockmined', this.chain)
     }
 
     async addNewBlock(newblock){
+        console.log(newblock)
         newblock.precedinghash = this.getLatestBlock().hash;
         newblock.index = this.getLatestBlock().index + 1
+        console.log(newblock)
         process.env.BREAK = false;
         const {block, StopMine} = await ProofOfWork(newblock, this.difficulty)
+        console.log(block)
         if( StopMine !== 'true'){
             this.blockMined(block)
         }        

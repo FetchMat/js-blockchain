@@ -2,16 +2,20 @@ const { io } = require('socket.io-client')
 const Block = require('./Block')
 const Blockchain = require('./Blockchain')
 
-const socketListener = (socket, chain) => {
-    socket.on('mine', (sender, receiver, qty) => {
+const socketListener = (socket, blockchain) => {
+
+    socket.on('mine', async (sender, receiver, qty) => {
+        console.log('ALLO2')
         let block = new Block({sender,receiver,qty})
-        chain.addNewBlock(block)
+        console.log('ALLO3')
+        await blockchain.addNewBlock(block)
+        console.log('ALLOAPRESADDBLOCK')
         console.info(`Block number ${block.index} just mined`)
     })
 
     socket.on('blockmined', (newChain) => {                
         process.env.BREAK = true;
-        Blockchain.chain = newChain
+        blockchain.chain = newChain
         console.info(`BLockchain synchronized`)
     })
 
